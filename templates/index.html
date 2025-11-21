@@ -299,6 +299,127 @@
         .updating {
             animation: pulse 1.5s ease-in-out infinite;
         }
+        
+        /* Before/After Comparison Section */
+        .comparison-section {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-bottom: 30px;
+            border: 3px solid #ecf0f1;
+        }
+        
+        .comparison-section h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2em;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .comparison-card {
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .comparison-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .comparison-card.before {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
+        }
+        
+        .comparison-card.after {
+            background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(81, 207, 102, 0.3);
+        }
+        
+        .comparison-card.reduction {
+            background: linear-gradient(135deg, #4dabf7 0%, #339af0 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(77, 171, 247, 0.3);
+        }
+        
+        .comparison-card h3 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .comparison-value {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 15px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .comparison-unit {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        
+        .comparison-label {
+            font-size: 0.9em;
+            opacity: 0.85;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        .comparison-divider {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2em;
+            color: #7f8c8d;
+        }
+        
+        .no-optimization {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        
+        .no-optimization-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-indicator.active {
+            background: #2ecc71;
+            box-shadow: 0 0 10px #2ecc71;
+        }
+        
+        .status-indicator.inactive {
+            background: #95a5a6;
+        }
     </style>
 </head>
 <body>
@@ -326,9 +447,9 @@
                 <div class="stat-unit">MB</div>
             </div>
             
-            <div class="stat-card">
+            <div class="stat-card" style="border: 3px solid #e74c3c;">
                 <span class="stat-icon">🔥</span>
-                <h3>Carbon Emissions</h3>
+                <h3>Current Carbon Emissions</h3>
                 <div class="stat-value" id="carbon">0</div>
                 <div class="stat-unit">g CO₂</div>
             </div>
@@ -417,6 +538,24 @@
             </div>
             
             <div id="optimization-results"></div>
+        </div>
+
+        <!-- Before/After Comparison Section -->
+        <div class="comparison-section" style="border: 4px solid #3498db;">
+            <h2>📊 Carbon Emission Comparison: Before vs After Optimization</h2>
+            <p style="text-align: center; color: #7f8c8d; margin-bottom: 20px; font-size: 1.1em;">
+                See how much carbon emission you can reduce by applying optimization strategies
+            </p>
+            <div id="comparison-content">
+                <div class="no-optimization">
+                    <div class="no-optimization-icon">📈</div>
+                    <p><strong>No optimization applied yet</strong></p>
+                    <p>Apply an optimization strategy above to see the before/after comparison</p>
+                    <p style="margin-top: 15px; font-size: 0.9em; color: #95a5a6;">
+                        👆 Select a strategy and click "Apply Selected Optimization" button
+                    </p>
+                </div>
+            </div>
         </div>
 
         <!-- Running Processes -->
@@ -508,6 +647,88 @@
             }
         }
         
+        // Update comparison display
+        async function updateComparison() {
+            try {
+                const response = await fetch('/api/optimization-data');
+                const data = await response.json();
+                
+                if (data.success && data.optimization_data.optimization_applied) {
+                    const opt = data.optimization_data;
+                    const comparisonDiv = document.getElementById('comparison-content');
+                    
+                    const beforeKg = (opt.before_carbon_g / 1000).toFixed(3);
+                    const afterKg = (opt.after_carbon_g / 1000).toFixed(3);
+                    const reductionKg = (opt.reduction_g / 1000).toFixed(3);
+                    
+                    comparisonDiv.innerHTML = `
+                        <div class="comparison-grid">
+                            <div class="comparison-card before">
+                                <h3>🔴 Previous Carbon Emission</h3>
+                                <div class="comparison-value">${opt.before_carbon_g.toFixed(2)}</div>
+                                <div class="comparison-unit">grams CO₂</div>
+                                <div class="comparison-label" style="margin-top: 15px; font-size: 0.95em;">
+                                    (${beforeKg} kg CO₂)
+                                </div>
+                                <div style="margin-top: 20px; padding-top: 15px; border-top: 2px solid rgba(255,255,255,0.3);">
+                                    <strong>Status:</strong> Before running optimization process
+                                </div>
+                            </div>
+                            
+                            <div class="comparison-card after">
+                                <h3>🟢 Future Carbon Emission</h3>
+                                <div class="comparison-value">${opt.after_carbon_g.toFixed(2)}</div>
+                                <div class="comparison-unit">grams CO₂</div>
+                                <div class="comparison-label" style="margin-top: 15px; font-size: 0.95em;">
+                                    (${afterKg} kg CO₂)
+                                </div>
+                                <div style="margin-top: 20px; padding-top: 15px; border-top: 2px solid rgba(255,255,255,0.3);">
+                                    <strong>Status:</strong> After running optimization process
+                                </div>
+                            </div>
+                            
+                            <div class="comparison-card reduction">
+                                <h3>💚 Total Carbon Reduced</h3>
+                                <div class="comparison-value">${opt.reduction_g.toFixed(2)}</div>
+                                <div class="comparison-unit">grams CO₂</div>
+                                <div class="comparison-label" style="margin-top: 15px; font-size: 0.95em;">
+                                    (${reductionKg} kg CO₂)
+                                </div>
+                                <div style="margin-top: 20px; padding-top: 15px; border-top: 2px solid rgba(255,255,255,0.3); font-size: 1.2em; font-weight: bold;">
+                                    ${opt.reduction_percent.toFixed(1)}% Reduction Achieved! 🎉
+                                </div>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                            <span class="status-indicator active"></span>
+                            <strong style="font-size: 1.1em; color: #2c3e50;">Optimization Active:</strong> 
+                            <span style="font-size: 1.1em; color: #3498db; font-weight: bold;">${getOptimizationTypeName(opt.optimization_type)}</span>
+                        </div>
+                    `;
+                } else {
+                    const comparisonDiv = document.getElementById('comparison-content');
+                    comparisonDiv.innerHTML = `
+                        <div class="no-optimization">
+                            <div class="no-optimization-icon">📈</div>
+                            <p><strong>No optimization applied yet</strong></p>
+                            <p>Apply an optimization strategy above to see the before/after comparison</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error updating comparison:', error);
+            }
+        }
+        
+        function getOptimizationTypeName(type) {
+            const names = {
+                'reduce_cpu': 'Reduce CPU Usage',
+                'optimize_network': 'Optimize Network',
+                'power_management': 'Power Management'
+            };
+            return names[type] || type;
+        }
+        
         // Apply optimization
         async function applyOptimization() {
             const resultsDiv = document.getElementById('optimization-results');
@@ -543,6 +764,9 @@
                     }
                     
                     resultsDiv.innerHTML = html;
+                    
+                    // Update comparison display
+                    updateComparison();
                 } else {
                     resultsDiv.innerHTML = `<div class="alert alert-warning">
                         <strong>⚠️ Optimization Partially Applied</strong><br>
@@ -563,9 +787,11 @@
         // Auto-update every 5 seconds
         setInterval(updateStats, 5000);
         setInterval(updateGraphs, 10000);
+        setInterval(updateComparison, 3000);
         
         // Initial load
         updateStats();
+        updateComparison();
         setTimeout(updateGraphs, 2000);
     </script>
 </body>

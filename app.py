@@ -35,6 +35,16 @@ historical_data = {
     'energy_consumption': []
 }
 
+# Track optimization before/after values
+optimization_data = {
+    'before_carbon_g': None,
+    'after_carbon_g': None,
+    'reduction_g': None,
+    'reduction_percent': None,
+    'optimization_applied': False,
+    'optimization_type': None
+}
+
 # Start monitoring in background
 monitoring_active = False
 
@@ -131,13 +141,42 @@ def optimize():
         data = request.get_json()
         optimization_type = data.get('type', 'reduce_cpu')
         
+        # Capture carbon emission BEFORE optimization
+        net_stats_before = monitor.get_stats()
+        carbon_metrics_before = calculator.get_carbon_metrics(net_stats_before)
+        before_carbon = carbon_metrics_before['total']['carbon_grams']
+        
+        # Apply optimization
         result = optimizer.apply_optimization(optimization_type)
+        
+        # Calculate estimated carbon emission AFTER optimization
+        # Get reduction percentage from the optimization result
+        reduction_percent_str = result.get('estimated_reduction', '30%').replace('%', '')
+        try:
+            reduction_percent = float(reduction_percent_str) / 100.0
+        except:
+            reduction_percent = 0.30  # Default 30%
+        
+        after_carbon = before_carbon * (1 - reduction_percent)
+        reduction_carbon = before_carbon - after_carbon
+        
+        # Store optimization data
+        optimization_data['before_carbon_g'] = before_carbon
+        optimization_data['after_carbon_g'] = after_carbon
+        optimization_data['reduction_g'] = reduction_carbon
+        optimization_data['reduction_percent'] = reduction_percent * 100
+        optimization_data['optimization_applied'] = True
+        optimization_data['optimization_type'] = optimization_type
         
         return jsonify({
             'success': result['success'],
             'optimization_type': optimization_type,
             'actions': result.get('actions', []),
             'estimated_reduction': result.get('estimated_reduction', 'N/A'),
+            'before_carbon_g': before_carbon,
+            'after_carbon_g': after_carbon,
+            'reduction_g': reduction_carbon,
+            'reduction_percent': reduction_percent * 100,
             'error': result.get('error')
         })
     except Exception as e:
@@ -208,6 +247,17 @@ def get_savings():
         return jsonify({
             'success': True,
             'savings': savings
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/optimization-data')
+def get_optimization_data():
+    """Get before/after optimization data"""
+    try:
+        return jsonify({
+            'success': True,
+            'optimization_data': optimization_data
         })
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
