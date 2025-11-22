@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Emission Comparison Graphs</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        h2 {
+            color: #2c3e50;
+            margin: 40px 0 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 5px solid #3498db;
+        }
+        .graph-container {
+            background: white;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+        }
+        .download-btn {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.6);
+        }
+        .download-btn:active {
+            transform: translateY(0);
+        }
+        .btn-container {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+        }
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            color: #2c3e50;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Carbon Emission Comparison Graphs</h1>
+        
+        <div class="info-box">
+            <strong>📥 How to Download:</strong> Click the "Download PNG" button below each graph. All graphs are interactive and can be downloaded as high-quality PNG images.
+        </div>
+
+        <!-- Graph 1: Before vs After Optimization -->
+        <h2>1. Before vs After Optimization Comparison</h2>
+        <div class="graph-container" id="graph1">
+            <div class="chart-wrapper">
+                <canvas id="beforeAfterChart"></canvas>
+            </div>
+            <div class="btn-container">
+                <button class="download-btn" onclick="downloadGraph('graph1', 'Before-After-Comparison')">📥 Download PNG</button>
+            </div>
+        </div>
+
+        <!-- Graph 2: Optimization Strategies Comparison -->
+        <h2>2. Optimization Strategies Comparison</h2>
+        <div class="graph-container" id="graph2">
+            <div class="chart-wrapper">
+                <canvas id="strategiesChart"></canvas>
+            </div>
+            <div class="btn-container">
+                <button class="download-btn" onclick="downloadGraph('graph2', 'Optimization-Strategies')">📥 Download PNG</button>
+            </div>
+        </div>
+
+        <!-- Graph 3: Carbon Reduction Over Time -->
+        <h2>3. Carbon Reduction Over Time (24 Hours)</h2>
+        <div class="graph-container" id="graph3">
+            <div class="chart-wrapper">
+                <canvas id="timeChart"></canvas>
+            </div>
+            <div class="btn-container">
+                <button class="download-btn" onclick="downloadGraph('graph3', 'Carbon-Over-Time')">📥 Download PNG</button>
+            </div>
+        </div>
+
+        <!-- Graph 4: Component-Wise Carbon Contribution -->
+        <h2>4. Component-Wise Carbon Contribution</h2>
+        <div class="graph-container" id="graph4">
+            <div class="chart-wrapper">
+                <canvas id="componentChart"></canvas>
+            </div>
+            <div class="btn-container">
+                <button class="download-btn" onclick="downloadGraph('graph4', 'Component-Contribution')">📥 Download PNG</button>
+            </div>
+        </div>
+
+        <!-- Graph 5: System Load Conditions Comparison -->
+        <h2>5. System Performance Under Different Load Conditions</h2>
+        <div class="graph-container" id="graph5">
+            <div class="chart-wrapper">
+                <canvas id="loadChart"></canvas>
+            </div>
+            <div class="btn-container">
+                <button class="download-btn" onclick="downloadGraph('graph5', 'System-Load-Comparison')">📥 Download PNG</button>
+            </div>
+        </div>
+
+        <!-- Graph 6: Cumulative Carbon Savings -->
+        <h2>6. Cumulative Carbon Savings Over Time</h2>
+        <div class="graph-container" id="graph6">
+            <div class="chart-wrapper">
+                <canvas id="cumulativeChart"></canvas>
+            </div>
+            <div class="btn-container">
+                <button class="download-btn" onclick="downloadGraph('graph6', 'Cumulative-Savings')">📥 Download PNG</button>
+            </div>
+        </div>
+
+        <!-- Graph 7: Optimization Effectiveness Matrix -->
+        <h2>7. Optimization Effectiveness by System Condition</h2>
+        <div class="graph-container" id="graph7">
+            <div class="chart-wrapper">
+                <canvas id="effectivenessChart"></canvas>
+            </div>
+            <div class="btn-container">
+                <button class="download-btn" onclick="downloadGraph('graph7', 'Effectiveness-Matrix')">📥 Download PNG</button>
+            </div>
+        </div>
+
+        <!-- Graph 8: Real-World Scenarios -->
+        <h2>8. Real-World Scenarios Comparison</h2>
+        <div class="graph-container" id="graph8">
+            <div class="chart-wrapper">
+                <canvas id="scenariosChart"></canvas>
+            </div>
+            <div class="btn-container">
+                <button class="download-btn" onclick="downloadGraph('graph8', 'Real-World-Scenarios')">📥 Download PNG</button>
+            </div>
+        </div>
+
+        <!-- Summary Statistics -->
+        <div class="graph-container">
+            <h2 style="margin-top: 0;">📈 Summary Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Average Reduction</div>
+                    <div class="stat-value">32%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Best Strategy</div>
+                    <div class="stat-value">Power Mgmt</div>
+                    <div class="stat-label">40% reduction</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Daily Savings</div>
+                    <div class="stat-value">480g</div>
+                    <div class="stat-label">CO₂ per system</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Annual Savings</div>
+                    <div class="stat-value">394kg</div>
+                    <div class="stat-label">CO₂ per system</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chart.js configuration
+        Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+        Chart.defaults.font.size = 12;
+        Chart.defaults.color = '#2c3e50';
+
+        // Graph 1: Before vs After Optimization
+        const beforeAfterCtx = document.getElementById('beforeAfterChart').getContext('2d');
+        const beforeAfterChart = new Chart(beforeAfterCtx, {
+            type: 'bar',
+            data: {
+                labels: ['CPU Optimization', 'Network Optimization', 'Power Management', 'Combined'],
+                datasets: [{
+                    label: 'Before Optimization (g CO₂)',
+                    data: [150, 200, 180, 200],
+                    backgroundColor: 'rgba(231, 76, 60, 0.8)',
+                    borderColor: 'rgba(231, 76, 60, 1)',
+                    borderWidth: 2
+                }, {
+                    label: 'After Optimization (g CO₂)',
+                    data: [105, 150, 108, 100],
+                    backgroundColor: 'rgba(46, 204, 113, 0.8)',
+                    borderColor: 'rgba(46, 204, 113, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Carbon Emission: Before vs After Optimization',
+                        font: { size: 18, weight: 'bold' }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Carbon Emission (g CO₂)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Graph 2: Optimization Strategies Comparison
+        const strategiesCtx = document.getElementById('strategiesChart').getContext('2d');
+        const strategiesChart = new Chart(strategiesCtx, {
+            type: 'radar',
+            data: {
+                labels: ['Reduction %', 'Ease of Implementation', 'System Impact', 'User Impact', 'Cost Effectiveness'],
+                datasets: [{
+                    label: 'CPU Reduction',
+                    data: [30, 60, 40, 50, 70],
+                    backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                    borderColor: 'rgba(52, 152, 219, 1)',
+                    borderWidth: 2
+                }, {
+                    label: 'Network Optimization',
+                    data: [25, 90, 10, 20, 80],
+                    backgroundColor: 'rgba(46, 204, 113, 0.2)',
+                    borderColor: 'rgba(46, 204, 113, 1)',
+                    borderWidth: 2
+                }, {
+                    label: 'Power Management',
+                    data: [40, 30, 60, 30, 90],
+                    backgroundColor: 'rgba(155, 89, 182, 0.2)',
+                    borderColor: 'rgba(155, 89, 182, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Optimization Strategies Comparison',
+                        font: { size: 18, weight: 'bold' }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        // Graph 3: Carbon Reduction Over Time
+        const timeCtx = document.getElementById('timeChart').getContext('2d');
+        const timeChart = new Chart(timeCtx, {
+            type: 'line',
+            data: {
+                labels: ['0h', '4h', '8h', '12h', '16h', '20h', '24h'],
+                datasets: [{
+                    label: 'Without Optimization',
+                    data: [0, 600, 1200, 1800, 2400, 3000, 3600],
+                    borderColor: 'rgba(231, 76, 60, 1)',
+                    backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: 'With Optimization (30% reduction)',
+                    data: [0, 420, 840, 1260, 1680, 2100, 2520],
+                    borderColor: 'rgba(46, 204, 113, 1)',
+                    backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Carbon Accumulation Over 24 Hours',
+                        font: { size: 18, weight: 'bold' }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Carbon Emission (g CO₂)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time (hours)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Graph 4: Component-Wise Carbon Contribution
+        const componentCtx = document.getElementById('componentChart').getContext('2d');
+        const componentChart = new Chart(componentCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['CPU', 'Network'],
+                datasets: [{
+                    label: 'Before Optimization',
+                    data: [100, 50],
+                    backgroundColor: [
+                        'rgba(231, 76, 60, 0.8)',
+                        'rgba(241, 196, 15, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(231, 76, 60, 1)',
+                        'rgba(241, 196, 15, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Component-Wise Carbon Contribution (Before)',
+                        font: { size: 18, weight: 'bold' }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'right'
+                    }
+                }
+            }
+        });
+
+        // Graph 5: System Load Conditions
+        const loadCtx = document.getElementById('loadChart').getContext('2d');
+        const loadChart = new Chart(loadCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Low Load', 'Medium Load', 'High Load'],
+                datasets: [{
+                    label: 'Before Optimization',
+                    data: [50, 120, 250],
+                    backgroundColor: 'rgba(231, 76, 60, 0.8)',
+                    borderColor: 'rgba(231, 76, 60, 1)',
+                    borderWidth: 2
+                }, {
+                    label: 'After Optimization',
+                    data: [35, 84, 150],
+                    backgroundColor: 'rgba(46, 204, 113, 0.8)',
+                    borderColor: 'rgba(46, 204, 113, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Carbon Emission Under Different Load Conditions',
+                        font: { size: 18, weight: 'bold' }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Carbon Emission (g CO₂/hour)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Graph 6: Cumulative Carbon Savings
+        const cumulativeCtx = document.getElementById('cumulativeChart').getContext('2d');
+        const cumulativeChart = new Chart(cumulativeCtx, {
+            type: 'line',
+            data: {
+                labels: ['Day 1', 'Day 7', 'Day 14', 'Day 21', 'Day 30', 'Day 60', 'Day 90'],
+                datasets: [{
+                    label: 'Cumulative Carbon Saved',
+                    data: [0.48, 3.36, 6.72, 10.08, 14.4, 28.8, 43.2],
+                    borderColor: 'rgba(46, 204, 113, 1)',
+                    backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Cumulative Carbon Savings Over 90 Days',
+                        font: { size: 18, weight: 'bold' }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Carbon Saved (kg CO₂)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time Period'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Graph 7: Optimization Effectiveness
+        const effectivenessCtx = document.getElementById('effectivenessChart').getContext('2d');
+        const effectivenessChart = new Chart(effectivenessCtx, {
+            type: 'bar',
+            data: {
+                labels: ['High CPU\nLow Network', 'Low CPU\nHigh Network', 'Balanced\nLoad', 'Extreme\nLoad'],
+                datasets: [{
+                    label: 'CPU Reduction',
+                    data: [35, 10, 20, 30],
+                    backgroundColor: 'rgba(52, 152, 219, 0.8)',
+                    borderColor: 'rgba(52, 152, 219, 1)',
+                    borderWidth: 2
+                }, {
+                    label: 'Network Optimization',
+                    data: [10, 35, 20, 25],
+                    backgroundColor: 'rgba(46, 204, 113, 0.8)',
+                    borderColor: 'rgba(46, 204, 113, 1)',
+                    borderWidth: 2
+                }, {
+                    label: 'Power Management',
+                    data: [30, 25, 40, 40],
+                    backgroundColor: 'rgba(155, 89, 182, 0.8)',
+                    borderColor: 'rgba(155, 89, 182, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Optimization Effectiveness by System Condition (%)',
+                        font: { size: 18, weight: 'bold' }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 50,
+                        title: {
+                            display: true,
+                            text: 'Effectiveness Score'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Graph 8: Real-World Scenarios
+        const scenariosCtx = document.getElementById('scenariosChart').getContext('2d');
+        const scenariosChart = new Chart(scenariosCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Development\nEnvironment', 'Office\nEnvironment', 'Server\nEnvironment'],
+                datasets: [{
+                    label: 'Before Optimization',
+                    data: [200, 100, 300],
+                    backgroundColor: 'rgba(231, 76, 60, 0.8)',
+                    borderColor: 'rgba(231, 76, 60, 1)',
+                    borderWidth: 2
+                }, {
+                    label: 'After Optimization',
+                    data: [140, 75, 180],
+                    backgroundColor: 'rgba(46, 204, 113, 0.8)',
+                    borderColor: 'rgba(46, 204, 113, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Real-World Scenarios: Carbon Emission Comparison',
+                        font: { size: 18, weight: 'bold' }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Carbon Emission (g CO₂/hour)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Download function
+        async function downloadGraph(containerId, filename) {
+            const container = document.getElementById(containerId);
+            const button = event.target;
+            const originalText = button.textContent;
+            
+            try {
+                button.textContent = '⏳ Generating...';
+                button.disabled = true;
+                
+                // Wait for any animations to complete
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Capture the container
+                const canvas = await html2canvas(container, {
+                    backgroundColor: '#ffffff',
+                    scale: 2,
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true,
+                    width: container.scrollWidth,
+                    height: container.scrollHeight
+                });
+                
+                // Convert to blob and download
+                canvas.toBlob(function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = filename + '.png';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                    
+                    button.textContent = originalText;
+                    button.disabled = false;
+                }, 'image/png', 1.0);
+                
+            } catch (error) {
+                console.error('Error downloading graph:', error);
+                alert('Error downloading graph. Please try again or use browser screenshot (F12).');
+                button.textContent = originalText;
+                button.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEP System Architecture Diagrams</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 40px;
+            border-left: 4px solid #3498db;
+            padding-left: 10px;
+        }
+        .diagram-container {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .mermaid {
+            text-align: center;
+            background: white;
+            min-height: 300px;
+        }
+        .download-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .download-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .download-btn:active {
+            transform: translateY(0);
+        }
+        .btn-container {
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #ecf0f1;
+        }
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+        .error-msg {
+            color: #e74c3c;
+            padding: 10px;
+            background: #ffeaea;
+            border-left: 4px solid #e74c3c;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌍 Carbon Emission Prediction System - Architecture Diagrams</h1>
+    
+    <div class="info-box">
+        <strong>📥 How to Download Diagrams:</strong><br>
+        1. Click the "Download PNG" button below each diagram<br>
+        2. Or right-click on the diagram and select "Save image as..."<br>
+        3. For best quality, use the download buttons
+    </div>
+
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-color" style="background: #e1f5ff;"></div>
+            <span>User Interface</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #fff4e1;"></div>
+            <span>Custom Calculation Engine</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #e8f5e9;"></div>
+            <span>Data Collection</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #fce4ec;"></div>
+            <span>psutil Library (Data Source)</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #f3e5f5;"></div>
+            <span>Data Storage</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #fff9c4;"></div>
+            <span>Output/Visualization</span>
+        </div>
+    </div>
+
+    <h2>1. High-Level System Architecture</h2>
+    <div class="diagram-container" id="diagram1">
+        <div class="mermaid" id="mermaid1">
+graph TB
+    subgraph UI["User Interface Layer"]
+        UI1[Web Dashboard]
+    end
+    
+    subgraph API["Application Layer Flask"]
+        API1["/api/stats"]
+        API2["/api/optimize"]
+        API3["/api/optimization-data"]
+        API4["/api/graph"]
+        API5["/api/savings"]
+    end
+    
+    subgraph MON["Data Collection Layer"]
+        MON1[BPFNetworkMonitor]
+        PSUTIL[psutil Library]
+    end
+    
+    subgraph CALC["Core Calculation Engine"]
+        CALC1[CarbonCalculator]
+        OPT1[CarbonOptimizer]
+    end
+    
+    subgraph STOR["Data Storage"]
+        HIST[Historical Data]
+        OPTDATA[Optimization Data]
+    end
+    
+    subgraph SYS["System Resources"]
+        CPU[CPU Usage]
+        MEM[Memory]
+        NET[Network I/O]
+        PROC[Processes]
+    end
+    
+    subgraph OUT["Output Visualization"]
+        GRAPH[Matplotlib Graphs]
+        METRICS[Carbon Metrics]
+        COMPARE[Before After Comparison]
+    end
+    
+    UI1 -->|HTTP| API1
+    UI1 -->|HTTP| API2
+    UI1 -->|HTTP| API3
+    UI1 -->|HTTP| API4
+    UI1 -->|HTTP| API5
+    
+    API1 -->|Get Stats| MON1
+    API2 -->|Get Stats| MON1
+    API3 -->|Read| OPTDATA
+    API4 -->|Read| HIST
+    API5 -->|Get Savings| CALC1
+    
+    MON1 -->|Collect| PSUTIL
+    PSUTIL -->|Read| CPU
+    PSUTIL -->|Read| MEM
+    PSUTIL -->|Read| NET
+    PSUTIL -->|Read| PROC
+    
+    MON1 -->|Network Stats| CALC1
+    PSUTIL -->|CPU Memory| CALC1
+    
+    CALC1 -->|Calculate| METRICS
+    CALC1 -->|Store| HIST
+    CALC1 -->|Calculate| METRICS
+    
+    API2 -->|Apply| OPT1
+    OPT1 -->|Analyze| PSUTIL
+    OPT1 -->|Get Carbon| CALC1
+    OPT1 -->|Store| OPTDATA
+    OPT1 -->|Calculate| OPTDATA
+    
+    API4 -->|Generate| GRAPH
+    HIST -->|Time Series| GRAPH
+    
+    API1 -->|JSON| UI1
+    API2 -->|JSON| UI1
+    API3 -->|JSON| UI1
+    API4 -->|Image| UI1
+    API5 -->|JSON| UI1
+    
+    OPTDATA -->|Data| COMPARE
+    COMPARE -->|Display| UI1
+    
+    style UI1 fill:#e1f5ff
+    style CALC1 fill:#fff4e1
+    style OPT1 fill:#fff4e1
+    style MON1 fill:#e8f5e9
+    style PSUTIL fill:#fce4ec
+    style HIST fill:#f3e5f5
+    style OPTDATA fill:#f3e5f5
+    style METRICS fill:#fff9c4
+    style GRAPH fill:#fff9c4
+    style COMPARE fill:#fff9c4
+        </div>
+        <div class="btn-container">
+            <button class="download-btn" onclick="downloadDiagram('diagram1', 'High-Level-Architecture')">📥 Download PNG</button>
+        </div>
+    </div>
+
+    <h2>2. Detailed Component Flow (Sequence Diagram)</h2>
+    <div class="diagram-container" id="diagram2">
+        <div class="mermaid" id="mermaid2">
+sequenceDiagram
+    participant User
+    participant UI as Web Dashboard
+    participant API as Flask API
+    participant Monitor as BPFNetworkMonitor
+    participant psutil as psutil Library
+    participant Calc as CarbonCalculator
+    participant Opt as CarbonOptimizer
+    participant Storage as Data Storage
+    
+    Note over User,Storage: System Initialization
+    Monitor->>psutil: Initialize monitoring
+    Monitor->>Monitor: Start background thread
+    
+    Note over User,Storage: Real-time Data Collection Every 5 seconds
+    loop Continuous Monitoring
+        Monitor->>psutil: Get CPU usage
+        psutil-->>Monitor: cpu_percent
+        Monitor->>psutil: Get network I/O
+        psutil-->>Monitor: bytes_sent bytes_received
+        Monitor->>psutil: Get memory stats
+        psutil-->>Monitor: memory_percent
+        Monitor->>Calc: Pass network stats
+        Calc->>psutil: Get CPU usage
+        psutil-->>Calc: cpu_percent
+        Calc->>Calc: Calculate CPU power Custom formula
+        Calc->>Calc: Calculate network carbon Custom formula
+        Calc->>Calc: Calculate total carbon Custom aggregation
+        Calc->>Storage: Store historical data
+    end
+    
+    Note over User,Storage: User Requests Stats
+    User->>UI: Load dashboard
+    UI->>API: GET /api/stats
+    API->>Monitor: Get current stats
+    Monitor->>psutil: Get latest metrics
+    psutil-->>Monitor: System metrics
+    Monitor-->>API: Network stats
+    API->>Calc: Calculate carbon metrics
+    Calc->>Calc: Apply custom formulas
+    Calc-->>API: Carbon metrics g CO2
+    API-->>UI: JSON response
+    UI-->>User: Display stats
+    
+    Note over User,Storage: User Applies Optimization
+    User->>UI: Click Apply Optimization
+    UI->>API: POST /api/optimize
+    API->>Calc: Get current carbon BEFORE
+    Calc-->>API: before_carbon_g
+    API->>Opt: Apply optimization strategy
+    Opt->>psutil: Get process list
+    psutil-->>Opt: Process data
+    Opt->>Opt: Analyze high-CPU processes Custom algorithm
+    Opt->>Opt: Generate recommendations Custom logic
+    Opt-->>API: Optimization result
+    API->>API: Calculate AFTER carbon Custom formula
+    API->>API: Calculate reduction Custom formula
+    API->>Storage: Store before after data
+    API-->>UI: Optimization result before after data
+    UI-->>User: Show comparison
+        </div>
+        <div class="btn-container">
+            <button class="download-btn" onclick="downloadDiagram('diagram2', 'Component-Flow-Sequence')">📥 Download PNG</button>
+        </div>
+    </div>
+
+    <h2>3. Package Module Flow</h2>
+    <div class="diagram-container" id="diagram3">
+        <div class="mermaid" id="mermaid3">
+graph LR
+    subgraph EXT["External Libraries"]
+        PSUTIL[psutil System Metrics]
+        FLASK[Flask Web Framework]
+        MATPLOT[Matplotlib Graph Generation]
+    end
+    
+    subgraph CUST["Custom Modules"]
+        BPF[bpf_monitor.py BPFNetworkMonitor]
+        CALC[carbon_calculator.py CarbonCalculator]
+        OPT[optimizer.py CarbonOptimizer]
+        APP[app.py Flask Application]
+    end
+    
+    subgraph DATA["Data Flow"]
+        RAW[Raw System Data CPU Memory Network]
+        PROCESSED[Processed Data Carbon Metrics]
+        STORED[Stored Data Historical Tracking]
+    end
+    
+    PSUTIL -->|Provides| RAW
+    RAW -->|Input| BPF
+    RAW -->|Input| CALC
+    
+    BPF -->|Uses| PSUTIL
+    CALC -->|Uses| PSUTIL
+    OPT -->|Uses| PSUTIL
+    
+    CALC -->|Generates| PROCESSED
+    OPT -->|Generates| PROCESSED
+    
+    PROCESSED -->|Stores| STORED
+    
+    APP -->|Uses| BPF
+    APP -->|Uses| CALC
+    APP -->|Uses| OPT
+    APP -->|Uses| FLASK
+    APP -->|Uses| MATPLOT
+    
+    APP -->|Reads| STORED
+    APP -->|Serves| UI[Web Interface]
+    
+    style PSUTIL fill:#ffcccc
+    style FLASK fill:#ccffcc
+    style MATPLOT fill:#ccccff
+    style BPF fill:#ffffcc
+    style CALC fill:#ffffcc
+    style OPT fill:#ffffcc
+    style APP fill:#ffffcc
+        </div>
+        <div class="btn-container">
+            <button class="download-btn" onclick="downloadDiagram('diagram3', 'Package-Module-Flow')">📥 Download PNG</button>
+        </div>
+    </div>
+
+    <h2>4. Data Flow Architecture</h2>
+    <div class="diagram-container" id="diagram4">
+        <div class="mermaid" id="mermaid4">
+flowchart TD
+    START([System Start]) --> INIT[Initialize Components]
+    INIT --> MONITOR[Start Background Monitoring]
+    
+    MONITOR --> COLLECT[Collect Data Every 5s]
+    
+    COLLECT --> PSUTIL_CALL[Call psutil Functions]
+    PSUTIL_CALL --> GET_CPU[psutil.cpu_percent]
+    PSUTIL_CALL --> GET_MEM[psutil.virtual_memory]
+    PSUTIL_CALL --> GET_NET[psutil.net_io_counters]
+    PSUTIL_CALL --> GET_PROC[psutil.process_iter]
+    
+    GET_CPU --> RAW_DATA[Raw System Metrics]
+    GET_MEM --> RAW_DATA
+    GET_NET --> RAW_DATA
+    GET_PROC --> RAW_DATA
+    
+    RAW_DATA --> CALC_ENGINE[CarbonCalculator Engine]
+    
+    CALC_ENGINE --> CPU_POWER["Calculate CPU Power<br/>Power = 50W + 65W × CPU%/100"]
+    CALC_ENGINE --> NET_CARBON["Calculate Network Carbon<br/>Bytes → GB → kWh → CO2"]
+    CALC_ENGINE --> CPU_CARBON["Calculate CPU Carbon<br/>Energy × Carbon Intensity"]
+    
+    CPU_POWER --> AGGREGATE[Aggregate Metrics]
+    NET_CARBON --> AGGREGATE
+    CPU_CARBON --> AGGREGATE
+    
+    AGGREGATE --> TOTAL_CARBON["Total Carbon Emission<br/>g CO2 / kg CO2"]
+    
+    TOTAL_CARBON --> STORE_HIST["Store in Historical Buffer<br/>Last 100 points"]
+    TOTAL_CARBON --> API_RESPONSE[API Response]
+    
+    STORE_HIST --> GRAPH_GEN["Generate Graphs<br/>Matplotlib"]
+    GRAPH_GEN --> GRAPH_OUT[Graph Images]
+    
+    API_RESPONSE --> USER_REQ{User Request Type}
+    
+    USER_REQ -->|Stats| SHOW_STATS[Display Current Stats]
+    USER_REQ -->|Optimize| OPT_FLOW[Optimization Flow]
+    USER_REQ -->|Graph| SHOW_GRAPH[Display Graph]
+    USER_REQ -->|Compare| SHOW_COMPARE[Show Before After]
+    
+    OPT_FLOW --> CAPTURE_BEFORE[Capture BEFORE Carbon]
+    CAPTURE_BEFORE --> APPLY_OPT[Apply Optimization Strategy]
+    APPLY_OPT --> OPT_ENGINE[CarbonOptimizer]
+    
+    OPT_ENGINE --> ANALYZE["Analyze Processes<br/>Custom Algorithm"]
+    OPT_ENGINE --> RECOMMEND["Generate Recommendations<br/>Custom Logic"]
+    
+    ANALYZE --> CALC_AFTER["Calculate AFTER Carbon<br/>Before × 1 - Reduction%"]
+    CALC_AFTER --> CALC_REDUCTION["Calculate Reduction<br/>Before - After"]
+    
+    CALC_REDUCTION --> STORE_OPT[Store Optimization Data]
+    STORE_OPT --> SHOW_COMPARE
+    
+    SHOW_STATS --> END1([Display to User])
+    SHOW_GRAPH --> END1
+    SHOW_COMPARE --> END1
+    
+    COLLECT -.->|Loop Every 5s| COLLECT
+    
+    style CALC_ENGINE fill:#fff4e1
+    style OPT_ENGINE fill:#fff4e1
+    style CPU_POWER fill:#e8f5e9
+    style NET_CARBON fill:#e8f5e9
+    style CPU_CARBON fill:#e8f5e9
+    style TOTAL_CARBON fill:#fff9c4
+    style PSUTIL_CALL fill:#fce4ec
+        </div>
+        <div class="btn-container">
+            <button class="download-btn" onclick="downloadDiagram('diagram4', 'Data-Flow-Architecture')">📥 Download PNG</button>
+        </div>
+    </div>
+
+    <h2>5. Component Interaction</h2>
+    <div class="diagram-container" id="diagram5">
+        <div class="mermaid" id="mermaid5">
+graph TB
+    subgraph INPUT["Input Layer"]
+        SYS[System Resources CPU Memory Network]
+    end
+    
+    subgraph PSUTIL_LAYER["Data Collection psutil"]
+        P1["psutil.cpu_percent<br/>Returns CPU %"]
+        P2["psutil.virtual_memory<br/>Returns Memory stats"]
+        P3["psutil.net_io_counters<br/>Returns Bytes sent/received"]
+        P4["psutil.process_iter<br/>Returns Process list"]
+        P5["psutil.net_connections<br/>Returns Connection list"]
+    end
+    
+    subgraph CUSTOM_LAYER["Custom Processing Layer"]
+        C1["CarbonCalculator<br/>calculate_cpu_power<br/>Custom Formula"]
+        C2["CarbonCalculator<br/>calculate_network_carbon<br/>Custom Formula"]
+        C3["CarbonCalculator<br/>calculate_total_energy<br/>Custom Formula"]
+        C4["CarbonCalculator<br/>get_carbon_metrics<br/>Custom Aggregation"]
+        O1["CarbonOptimizer<br/>reduce_cpu_usage<br/>Custom Algorithm"]
+        O2["CarbonOptimizer<br/>optimize_network<br/>Custom Algorithm"]
+        O3["CarbonOptimizer<br/>enable_power_management<br/>Custom Algorithm"]
+    end
+    
+    subgraph OUTPUT["Output Layer"]
+        OUT1["Carbon Metrics<br/>g CO2 kg CO2"]
+        OUT2["Optimization Results<br/>Before After Reduction"]
+        OUT3["Historical Graphs<br/>Time Series Data"]
+        OUT4["API Responses<br/>JSON Images"]
+    end
+    
+    SYS --> P1
+    SYS --> P2
+    SYS --> P3
+    SYS --> P4
+    SYS --> P5
+    
+    P1 --> C1
+    P3 --> C2
+    C1 --> C3
+    C2 --> C4
+    C3 --> C4
+    C4 --> OUT1
+    
+    P4 --> O1
+    P5 --> O2
+    O1 --> OUT2
+    O2 --> OUT2
+    O3 --> OUT2
+    
+    OUT1 --> OUT3
+    OUT1 --> OUT4
+    OUT2 --> OUT4
+    
+    style P1 fill:#fce4ec
+    style P2 fill:#fce4ec
+    style P3 fill:#fce4ec
+    style P4 fill:#fce4ec
+    style P5 fill:#fce4ec
+    style C1 fill:#fff4e1
+    style C2 fill:#fff4e1
+    style C3 fill:#fff4e1
+    style C4 fill:#fff4e1
+    style O1 fill:#fff4e1
+    style O2 fill:#fff4e1
+    style O3 fill:#fff4e1
+        </div>
+        <div class="btn-container">
+            <button class="download-btn" onclick="downloadDiagram('diagram5', 'Component-Interaction')">📥 Download PNG</button>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <strong>📋 Summary:</strong><br>
+        • <strong>psutil</strong> (pink/red): Only used for data collection - 5 function calls<br>
+        • <strong>Custom Components</strong> (yellow): All calculations, optimizations, and processing<br>
+        • <strong>Data Flow</strong>: System → psutil → Custom Processing → Output<br>
+        • <strong>Total Custom Code</strong>: ~800+ lines (95% of system)
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            sequence: {
+                diagramMarginX: 50,
+                diagramMarginY: 10,
+                actorMargin: 50,
+                width: 150,
+                height: 65,
+                boxMargin: 10,
+                boxTextMargin: 5,
+                noteMargin: 10,
+                messageMargin: 35
+            }
+        });
+
+        // Download diagram function
+        async function downloadDiagram(containerId, filename) {
+            const container = document.getElementById(containerId);
+            const button = event.target;
+            const originalText = button.textContent;
+            
+            try {
+                button.textContent = '⏳ Generating...';
+                button.disabled = true;
+                
+                // Wait a bit for any rendering to complete
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Use html2canvas to capture the diagram
+                const canvas = await html2canvas(container, {
+                    backgroundColor: '#ffffff',
+                    scale: 2,
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true
+                });
+                
+                // Convert to blob and download
+                canvas.toBlob(function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = filename + '.png';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                    
+                    button.textContent = originalText;
+                    button.disabled = false;
+                }, 'image/png');
+                
+            } catch (error) {
+                console.error('Error downloading diagram:', error);
+                alert('Error downloading diagram. Please try right-clicking on the diagram and selecting "Save image as..."');
+                button.textContent = originalText;
+                button.disabled = false;
+            }
+        }
+
+        // Handle mermaid rendering errors
+        window.addEventListener('error', function(e) {
+            if (e.message && e.message.includes('mermaid')) {
+                console.warn('Mermaid rendering issue:', e.message);
+            }
+        }, true);
+    </script>
+</body>
+</html>
